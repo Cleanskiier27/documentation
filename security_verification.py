@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 
 # Security Configuration
-SECURITY_DIR = Path(__file__).parent / ".security"
+SECURITY_DIR = Path(__file__).parent / ".security_alt"
 USERS_FILE = SECURITY_DIR / "users.json"
 ACCESS_LOG = SECURITY_DIR / "access.log"
 ALERT_LOG = SECURITY_DIR / "alerts.log"

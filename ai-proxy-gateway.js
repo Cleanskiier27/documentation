@@ -49,7 +49,8 @@ function logRequest(req, status, duration, provider = null) {
 }
 
 // Middleware
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
 // CORS for all origins (devices may come from anywhere)
 app.use((req, res, next) => {

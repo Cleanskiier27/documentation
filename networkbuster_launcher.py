@@ -15,6 +15,8 @@ from pathlib import Path
 import webbrowser
 import schedule
 
+import networkbuster_ascii_art
+
 # Service configuration
 SERVICES = [
     {
@@ -73,6 +75,30 @@ SERVICES = [
         'type': 'python',
         'critical': False,
         'startup_delay': 12
+    },
+    {
+        'name': 'Vegas Dome',
+        'port': 9000,
+        'command': 'python vegas_dome_renderer.py',
+        'type': 'python',
+        'critical': False,
+        'startup_delay': 14
+    },
+    {
+        'name': 'Test Center',
+        'port': 4000,
+        'command': 'python networkbuster_test_center.py',
+        'type': 'python',
+        'critical': False,
+        'startup_delay': 16
+    },
+    {
+        'name': 'Nexus One VM',
+        'port': 9001,
+        'command': 'python arch_matrix_vm.py',
+        'type': 'python',
+        'critical': False,
+        'startup_delay': 18
     }
 ]
 
@@ -88,6 +114,7 @@ class NetworkBusterManager:
     
     def apply_production_optimizations(self):
         """Apply max power optimizations for production"""
+        networkbuster_ascii_art.show_splash()
         print("\n🔥 APPLYING MAX POWER PRODUCTION OPTIMIZATIONS...")
         print("="*60)
         
@@ -163,6 +190,11 @@ class NetworkBusterManager:
             return None
         
         # Build command
+        env = os.environ.copy()
+        env['SERVICE_NAME'] = service['name']
+        if service['name'] == 'API Server':
+            env['PORT'] = '3001'
+        
         if service['type'] == 'python':
             cmd = f"python {service['command']}"
             if sys.platform == 'win32':
@@ -182,13 +214,15 @@ class NetworkBusterManager:
                     cmd,
                     shell=True,
                     cwd=cwd,
+                    env=env,
                     creationflags=subprocess.CREATE_NEW_CONSOLE
                 )
             else:
                 process = subprocess.Popen(
                     cmd,
                     shell=True,
-                    cwd=cwd
+                    cwd=cwd,
+                    env=env
                 )
             
             # Wait a bit for startup

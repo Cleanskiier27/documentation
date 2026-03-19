@@ -23,3 +23,7 @@ os/lfs/output/
 # Local sensitive scripts (do not commit)
 scripts/dummy-sa.json
 scripts/gcloud-startup.ps1
+
+.venv/
+__pycache__/
+.security_alt/

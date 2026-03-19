@@ -96,7 +96,10 @@
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.3",
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
+    "helmet": "^8.1.0",
     "http-proxy": "^1.18.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"

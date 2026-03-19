@@ -21,10 +21,26 @@ try {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.AUDIO_PORT || 3002;
+const SERVICE_NAME = process.env.SERVICE_NAME || 'Audio Server';
 
 // Middleware
 if (compression) app.use(compression());
 if (helmet) app.use(helmet());
+
+// Security: Add specific CSP for Audio Lab
+if (helmet) {
+  app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'", "http://localhost:*"],
+      mediaSrc: ["'self'", "blob:", "data:"],
+      imgSrc: ["'self'", "data:", "https://*"]
+    }
+  }));
+}
+
 app.use(express.json({ limit: '10mb' }));
 
 // Audio processing state
@@ -222,7 +238,102 @@ app.get('/health', (req, res) => {
 
 // Audio processing UI
 app.get('/audio-lab', (req, res) => {
-  const htmlContent = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Audio Lab</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;background:linear-gradient(135deg,#1a1a2e,#16213e);min-height:100vh;padding:20px;color:#fff}.container{max-width:1400px;margin:0 auto}.header{text-align:center;margin-bottom:40px}.header h1{font-size:3em;background:linear-gradient(135deg,#0f3460,#533483);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}.header p{color:#aaa;font-size:1.1em}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:20px;margin-bottom:30px}.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:25px;backdrop-filter:blur(10px)}.card-title{font-size:1.3em;font-weight:700;margin-bottom:15px;color:#00d4ff}.control-group{margin-bottom:15px}.label{font-size:.9em;color:#aaa;margin-bottom:5px;display:block}.input,select{width:100%;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-size:1em}.input:focus{outline:none;border-color:#00d4ff;background:rgba(0,212,255,.1)}.button{width:100%;padding:12px;background:linear-gradient(135deg,#0f3460,#533483);border:none;color:#fff;font-weight:600;border-radius:6px;cursor:pointer;transition:all .3s;font-size:1em}.button:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,212,255,.3)}.spectrum-display{display:flex;gap:8px;margin-top:15px;height:120px}.spectrum-bar{flex:1;background:linear-gradient(180deg,#00d4ff,#0f3460);border-radius:4px}.result-box{background:rgba(0,212,255,.1);border:1px solid #00d4ff;border-radius:6px;padding:15px;margin-top:15px;font-family:monospace;font-size:.9em}.success{color:#00ff88}</style></head><body><div class="container"><div class="header"><h1>🎵 AI Audio Lab</h1><p>Dual/Tri Server Audio Streaming & Processing</p></div><div class="grid"><div class="card"><div class="card-title">Stream Manager</div><div class="control-group"><button class="button" onclick="createStream()">Create Audio Stream</button></div><div id="streamStatus" style="margin-top:15px;color:#aaa;font-size:.9em">No active stream</div></div><div class="card"><div class="card-title">Frequency Synthesizer</div><div class="control-group"><label class="label">Frequency (Hz)</label><input type="number" id="frequency" class="input" value="440" min="20" max="20000"></div><div class="control-group"><label class="label">Duration (ms)</label><input type="number" id="duration" class="input" value="1000" min="10" max="10000"></div><div class="control-group"><label class="label">Waveform</label><select id="waveform" class="input"><option>sine</option><option>square</option><option>sawtooth</option><option>triangle</option></select></div><button class="button" onclick="synthesizeAudio()">Synthesize Tone</button><div id="synthResult" class="result-box" style="display:none"></div></div><div class="card"><div class="card-title">Real-Time Analysis</div><div class="control-group"><button class="button" onclick="detectFrequency()">Detect Frequency</button><button class="button" onclick="analyzeSpectrum()" style="margin-top:10px">Analyze Spectrum</button></div><div id="analysisResult" class="result-box" style="display:none"></div></div><div class="card"><div class="card-title">Spectrum Display</div><div class="spectrum-display" id="spectrumDisplay"><div class="spectrum-bar"></div><div class="spectrum-bar"></div><div class="spectrum-bar"></div><div class="spectrum-bar"></div><div class="spectrum-bar"></div></div></div><div class="card"><div class="card-title">Stream Monitoring</div><button class="button" onclick="listStreams()">List Active Streams</button><div id="streamsOutput" class="result-box" style="display:none"></div></div></div></div><script>let currentStreamId=null;function createStream(){fetch("/api/audio/stream/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({})}).then(r=>r.json()).then(d=>{currentStreamId=d.streamId;document.getElementById("streamStatus").innerHTML="<div class=\"success\">Stream "+d.streamId+" created</div><small>Ready for audio processing</small>";console.log("Stream created:",d)}).catch(e=>{console.error(e);alert("Failed to create stream")})}function synthesizeAudio(){const freq=document.getElementById("frequency").value;const dur=document.getElementById("duration").value;const wave=document.getElementById("waveform").value;fetch("/api/audio/synthesize",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({frequency:freq,duration:dur,waveform:wave})}).then(r=>r.json()).then(d=>{const result=document.getElementById("synthResult");result.style.display="block";result.innerHTML="<div class=\"success\">Synthesized</div>Frequency: "+d.synthesis.frequency+" Hz<br>Duration: "+d.synthesis.duration+" ms<br>Waveform: "+d.synthesis.waveform}).catch(e=>console.error(e))}function detectFrequency(){fetch("/api/audio/detect-frequency",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({audioBuffer:new Float32Array(1024)})}).then(r=>r.json()).then(d=>{const result=document.getElementById("analysisResult");result.style.display="block";result.innerHTML="<div class=\"success\">Detected</div>Dominant: "+d.dominantFrequency+" Hz<br>Confidence: "+d.confidence}).catch(e=>console.error(e))}function analyzeSpectrum(){fetch("/api/audio/spectrum",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({streamId:currentStreamId})}).then(r=>r.json()).then(d=>{const result=document.getElementById("analysisResult");result.style.display="block";result.innerHTML="<div class=\"success\">Analysis Complete</div>Bass: "+d.spectrum.bass+"%<br>Low Mid: "+d.spectrum.lowMid+"%<br>Mid: "+d.spectrum.mid+"%<br>High Mid: "+d.spectrum.highMid+"%<br>Treble: "+d.spectrum.treble+"%"}).catch(e=>console.error(e))}function listStreams(){fetch("/api/audio/streams").then(r=>r.json()).then(d=>{const output=document.getElementById("streamsOutput");output.style.display="block";output.innerHTML="<div class=\"success\">"+d.totalStreams+" Total Streams</div><small>Active: "+d.activeStreams+"</small>"}).catch(e=>console.error(e))}</script></body></html>';
+  const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Audio Lab | NetworkBuster</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: rgba(20, 20, 25, 0.8);
+            --neon-blue: #00d4ff;
+            --neon-purple: #bc13fe;
+            --text: #e0e0e0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; }
+        .glass { background: var(--panel); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 25px; }
+        .header { margin-bottom: 30px; text-align: center; }
+        h1 { color: var(--neon-blue); text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 10px var(--neon-blue); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card-title { font-size: 0.9rem; color: var(--neon-purple); text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid rgba(188, 19, 254, 0.3); padding-bottom: 10px; }
+        .btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; transition: 0.3s; margin-top: 10px; font-weight: 600; }
+        .btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
+        .input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 15px; }
+        .visualizer { height: 150px; display: flex; align-items: flex-end; gap: 3px; background: #000; padding: 10px; border-radius: 8px; border: 1px solid #222; }
+        .bar { flex: 1; background: var(--neon-blue); min-height: 2px; }
+        .status { font-family: monospace; font-size: 0.8rem; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎵 AI AUDIO LAB</h1>
+        <div style="margin-top: 10px;">
+            <a href="http://localhost:3000" style="color: var(--neon-purple); text-decoration: none; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--neon-purple); padding: 5px 15px; border-radius: 4px; transition: 0.3s;">➔ RETURN_TO_MANAGER</a>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="glass">
+            <div class="card-title">Stream Engine</div>
+            <button class="btn" onclick="createStream()">INIT_SESSION</button>
+            <div id="streamStatus" class="status">IDLE_STANDBY</div>
+            <div class="visualizer" id="viz"></div>
+        </div>
+        <div class="glass">
+            <div class="card-title">Synthesizer (Hz)</div>
+            <input type="number" id="freq" class="input" value="440">
+            <select id="wave" class="input">
+                <option>sine</option><option>square</option><option>sawtooth</option>
+            </select>
+            <button class="btn" onclick="synth()">EXEC_SYNTH</button>
+        </div>
+        <div class="glass">
+            <div class="card-title">Spectrum Analysis</div>
+            <button class="btn" onclick="detect()">DETECT_FREQ</button>
+            <div id="results" class="status" style="white-space: pre;">TELEMETRY_READY</div>
+        </div>
+    </div>
+    <script>
+        function createStream() {
+            fetch('/api/audio/stream/create', {method:'POST'})
+                .then(r=>r.json()).then(d=>{
+                    document.getElementById('streamStatus').innerHTML = '<span style="color:var(--neon-blue)">SESSION_ACTIVE: '+d.streamId+'</span>';
+                    startViz();
+                });
+        }
+        function synth() {
+            fetch('/api/audio/synthesize', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({frequency: document.getElementById('freq').value, duration: 1000, waveform: document.getElementById('wave').value})
+            }).then(r=>r.json()).then(d=>document.getElementById('results').textContent = 'SYNTH_OK: ' + d.message);
+        }
+        function startViz() {
+            const viz = document.getElementById('viz');
+            viz.innerHTML = '';
+            for(let i=0; i<40; i++) {
+                const b = document.createElement('div');
+                b.className = 'bar';
+                viz.appendChild(b);
+            }
+            setInterval(() => {
+                document.querySelectorAll('.bar').forEach(b => {
+                    const h = Math.random() * 100;
+                    b.style.height = h + '%';
+                    b.style.background = h > 70 ? 'var(--neon-purple)' : 'var(--neon-blue)';
+                });
+            }, 100);
+        }
+        function detect() {
+            fetch('/api/audio/detect-frequency', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({audioBuffer: [0]})
+            }).then(r=>r.json()).then(d=>document.getElementById('results').textContent = 'DOMINANT: ' + d.dominantFrequency + 'Hz\\nCONF: ' + d.confidence);
+        }
+    </script>
+</body>
+</html>`;
   res.send(htmlContent);
 });
 
@@ -239,7 +350,7 @@ app.use((err, req, res, next) => {
 
 // Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🎵 Audio Server running at http://localhost:${PORT}`);
+  console.log(`\n🎵 ${SERVICE_NAME} running at http://localhost:${PORT}`);
   console.log(`⚡ Features:`);
   if (compression) console.log(`   ✓ Compression enabled`);
   if (helmet) console.log(`   ✓ Security headers enabled`);

@@ -1,16 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NetworkBuster - Unified Dev Environment</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    <footer style="position:fixed;bottom:0;width:100%;text-align:center;padding:8px;background:rgba(0,0,0,0.03);font-size:14px;">
-      <a href="https://networkbuster.org" style="text-decoration:none;color:inherit;">networkbuster.org — AI style</a>
-    </footer>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetworkBuster | Music Command Center</title>
+    <style>
+        :root {
+            --bg: #010103;
+            --glass: rgba(15, 15, 25, 0.85);
+            --neon-blue: #00d4ff;
+            --neon-green: #00ff88;
+            --neon-purple: #bc13fe;
+            --neon-red: #ff3131;
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 70%);
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        /* App Shell */
+        .app-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            grid-template-rows: 70px 1fr 100px;
+            height: 100vh;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: 6px; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); }
+
+        /* Left Sidebar: Audio Matrix */
+        .sidebar {
+            grid-row: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Center: Tactical Viewport */
+        .main-view {
+            grid-row: 2;
+            position: relative;
+        }
+        iframe { width: 100%; height: 100%; border: none; border-radius: 8px; background: #000; }
+
+        /* Bottom: Command Bar (Music Control) */
+        footer {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        /* Components */
+        .card { padding: 20px; height: 100%; position: relative; overflow: hidden; }
+        .card-title { font-size: 0.7rem; font-weight: 800; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+
+        /* Music Controls */
+        .player-info { display: flex; align-items: center; gap: 15px; }
+        .track-art { width: 50px; height: 50px; background: #111; border: 1px solid var(--neon-blue); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .controls { display: flex; justify-content: center; gap: 25px; align-items: center; }
+        .control-btn { background: transparent; border: none; color: var(--text); cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
+        .control-btn:hover { color: var(--neon-blue); transform: scale(1.1); }
+        .play-btn { width: 50px; height: 50px; border: 2px solid var(--neon-blue); border-radius: 50%; color: var(--neon-blue); }
+
+        /* Visualizer nodes */
+        .viz-node-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .viz-node { height: 60px; background: rgba(255,255,255,0.02); border: 1px solid #222; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: #444; position: relative; overflow: hidden; }
+        .node-pulse { position: absolute; bottom: 0; width: 100%; background: var(--neon-purple); opacity: 0.3; transition: 0.1s; }
+
+        .btn-action {
+            width: 100%; padding: 12px; background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue);
+            font-size: 0.7rem; font-weight: 800; cursor: pointer; border-radius: 4px; transition: 0.3s;
+        }
+        .btn-action:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
+
+        .status-tag { float: right; font-size: 0.6rem; padding: 2px 8px; border-radius: 10px; background: rgba(0,255,136,0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="glass">
+            <div class="logo">NETWORKBUSTER // MODULES</div>
+            <div style="display: flex; gap: 20px; font-size: 0.7rem; font-weight: 800;">
+                <span style="color: var(--neon-green);">● SYSTEM_NOMINAL</span>
+                <span style="color: var(--neon-purple);">● LUNAR_SYNC_ACTIVE</span>
+            </div>
+        </header>
+
+        <!-- Stage 1: Audio Matrix -->
+        <div class="sidebar">
+            <div class="card glass">
+                <div class="card-title">Audio Architecture</div>
+                <div class="viz-node-container" id="nodes">
+                    <div class="viz-node">SUB_01<div class="node-pulse" style="height: 40%;"></div></div>
+                    <div class="viz-node">MID_02<div class="node-pulse" style="height: 70%;"></div></div>
+                    <div class="viz-node">HGH_03<div class="node-pulse" style="height: 20%;"></div></div>
+                    <div class="viz-node">FRQ_04<div class="node-pulse" style="height: 90%;"></div></div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn-action" onclick="window.open('http://localhost:3002/audio-lab', '_blank')">OPEN_AUDIO_LAB</button>
+                </div>
+            </div>
+
+            <div class="card glass" style="flex: 1;">
+                <div class="card-title">Network Nodes</div>
+                <div id="nodeList" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 2: Main Tactical View -->
+        <div class="main-view">
+            <div class="glass" style="height: 100%; position: relative;">
+                <div style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+                    <button class="btn-action" style="padding: 5px 10px; font-size: 0.6rem;" onclick="setMain('http://localhost:9001')">ARCH_MATRIX_VM</button>
+                    <button class="btn-action" style="padding: 5px 10px; font-size: 0.6rem;" onclick="setMain('http://localhost:5000')">MISSION_CTRL</button>
+                </div>
+                <iframe id="mainFrame" src="http://localhost:9001"></iframe>
+            </div>
+        </div>
+
+        <!-- Stage 3: Music Command Bar -->
+        <footer class="glass">
+            <div class="player-info">
+                <div class="track-art">🎵</div>
+                <div>
+                    <div style="font-size: 0.8rem; font-weight: 800;">NEXUS_STREAM_ONE</div>
+                    <div style="font-size: 0.6rem; color: var(--neon-blue);">NETWORKBUSTER AUDIO MODULE</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn">⏮</button>
+                <button class="control-btn play-btn" onclick="togglePlay()">▶</button>
+                <button class="control-btn">⏭</button>
+            </div>
+
+            <div style="text-align: right;">
+                <div style="font-size: 0.6rem; color: #555; margin-bottom: 5px;">ARCHITECTURE_AGILITY_MODE</div>
+                <button class="btn-action" style="width: auto; border-color: var(--neon-purple); color: var(--neon-purple);" onclick="window.open('http://localhost:4000', '_blank')">EXEC_DIAGNOSTICS</button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const nodeMap = [
+            { name: 'WEB_CORE', port: 3000 },
+            { name: 'API_NEXUS', port: 3001 },
+            { name: 'AUDIO_LAB', port: 3002 },
+            { name: 'TEST_CTRL', port: 4000 },
+            { name: 'MISSION_HQ', port: 5000 },
+            { name: 'MAP_RENDER', port: 6000 },
+            { name: 'ARCH_VM', port: 9001 }
+        ];
+
+        function setMain(url) { document.getElementById('mainFrame').src = url; }
+
+        async function updateNodes() {
+            const list = document.getElementById('nodeList');
+            list.innerHTML = '';
+            for(const n of nodeMap) {
+                let status = 'offline';
+                try {
+                    const res = await fetch(`http://localhost:${n.port}/api/health`);
+                    if(res.ok) status = 'online';
+                } catch(e) {}
+                
+                const div = document.createElement('div');
+                div.style.padding = '10px';
+                div.style.background = 'rgba(255,255,255,0.02)';
+                div.style.borderRadius = '4px';
+                div.style.fontSize = '0.7rem';
+                div.innerHTML = `<span class="status-tag" style="background:${status=='online'?'rgba(0,255,136,0.1)':'rgba(255,49,49,0.1)'}; color:${status=='online'?'var(--neon-green)':'var(--neon-red)'}; border-color:${status=='online'?'var(--neon-green)':'var(--neon-red)'}">${status.toUpperCase()}</span> ${n.name}`;
+                list.appendChild(div);
+            }
+        }
+
+        function togglePlay() {
+            const btn = document.querySelector('.play-btn');
+            if(btn.innerText === '▶') {
+                btn.innerText = '⏸';
+                btn.style.boxShadow = '0 0 20px var(--neon-blue)';
+            } else {
+                btn.innerText = '▶';
+                btn.style.boxShadow = 'none';
+            }
+        }
+
+        setInterval(() => {
+            document.querySelectorAll('.node-pulse').forEach(p => {
+                p.style.height = Math.floor(Math.random() * 100) + '%';
+            });
+        }, 150);
+
+        setInterval(updateNodes, 5000);
+        updateNodes();
+    </script>
+</body>
 </html>

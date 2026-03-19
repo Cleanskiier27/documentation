@@ -32,11 +32,27 @@ class NASAHomeBase:
         self.ports = {
             'web': {'port': 3000, 'name': 'Web Server', 'status': 'offline'},
             'api': {'port': 3001, 'name': 'API Server', 'status': 'offline'},
-            'audio': {'port': 3002, 'name': 'Audio Stream', 'status': 'offline'}
+            'audio': {'port': 3002, 'name': 'Audio Stream', 'status': 'offline'},
+            'mission': {'port': 5000, 'name': 'Mission Control', 'status': 'offline'},
+            'map': {'port': 6000, 'name': 'Network Map', 'status': 'offline'},
+            'launcher': {'port': 7000, 'name': 'Universal Launcher', 'status': 'offline'},
+            'tracer': {'port': 8000, 'name': 'API Tracer', 'status': 'offline'}
+        }
+        self.artemis_status = {
+            'mission': 'Artemis II',
+            'status': 'Nominal',
+            'phase': 'Lunar Insertion',
+            'crew': ['Cmdr. Network', 'Pilot Buster'],
+            'fuel': '85%',
+            'velocity': '3.2 km/s'
         }
         self.mission_start_time = datetime.now()
         self.mission_log = []
         
+    def get_artemis_data(self):
+        """Get Artemis mission data"""
+        return self.artemis_status
+
     def log_event(self, event, level='INFO'):
         """Log mission event"""
         timestamp = datetime.now().strftime('%H:%M:%S')
@@ -95,400 +111,72 @@ if FLASK_AVAILABLE:
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>NASA Home Base - Mission Control</title>
+        <title>NASA Mission Control | NetworkBuster</title>
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            
-            body {
-                font-family: 'Courier New', monospace;
-                background: #000;
-                color: #0f0;
-                overflow: hidden;
-            }
-            
-            .container {
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                padding: 20px;
-            }
-            
-            .header {
-                text-align: center;
-                padding: 20px;
-                background: linear-gradient(90deg, #001a33, #003366, #001a33);
-                border: 2px solid #0f0;
-                border-radius: 10px;
-                margin-bottom: 20px;
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            }
-            
-            .header h1 {
-                font-size: 2.5em;
-                color: #00ff00;
-                text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-                letter-spacing: 5px;
-            }
-            
-            .header .subtitle {
-                color: #00aaff;
-                font-size: 1.2em;
-                margin-top: 10px;
-                letter-spacing: 2px;
-            }
-            
-            .main-grid {
-                display: grid;
-                grid-template-columns: 1fr 2fr 1fr;
-                gap: 20px;
-                flex: 1;
-            }
-            
-            .panel {
-                background: rgba(0, 26, 51, 0.9);
-                border: 2px solid #0f0;
-                border-radius: 10px;
-                padding: 20px;
-                overflow-y: auto;
-                box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
-            }
-            
-            .panel-title {
-                font-size: 1.3em;
-                color: #00ff00;
-                text-align: center;
-                margin-bottom: 20px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid #0f0;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-            }
-            
-            .service-item {
-                background: rgba(0, 51, 102, 0.5);
-                border-left: 4px solid #00aaff;
-                padding: 15px;
-                margin-bottom: 15px;
-                border-radius: 5px;
-                transition: all 0.3s;
-            }
-            
-            .service-item:hover {
-                background: rgba(0, 51, 102, 0.8);
-                border-left-color: #00ff00;
-                transform: translateX(5px);
-            }
-            
-            .service-item.online {
-                border-left-color: #00ff00;
-            }
-            
-            .service-item.offline {
-                border-left-color: #ff4444;
-            }
-            
-            .service-name {
-                font-size: 1.2em;
-                font-weight: bold;
-                color: #00ffff;
-                margin-bottom: 8px;
-            }
-            
-            .service-port {
-                color: #00aaff;
-                font-size: 0.9em;
-            }
-            
-            .service-status {
-                display: inline-block;
-                padding: 5px 15px;
-                border-radius: 15px;
-                font-size: 0.85em;
-                font-weight: bold;
-                margin-top: 8px;
-            }
-            
-            .service-status.online {
-                background: rgba(0, 255, 0, 0.2);
-                color: #00ff00;
-                border: 1px solid #00ff00;
-            }
-            
-            .service-status.offline {
-                background: rgba(255, 68, 68, 0.2);
-                color: #ff4444;
-                border: 1px solid #ff4444;
-            }
-            
-            .btn {
-                width: 100%;
-                padding: 12px;
-                margin-top: 10px;
-                background: #003366;
-                color: #00ff00;
-                border: 2px solid #00ff00;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 1em;
-                font-weight: bold;
-                transition: all 0.3s;
-                font-family: 'Courier New', monospace;
-            }
-            
-            .btn:hover {
-                background: #00ff00;
-                color: #000;
-                box-shadow: 0 0 15px #0f0;
-            }
-            
-            .mission-stats {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-                margin-bottom: 20px;
-            }
-            
-            .stat-box {
-                background: rgba(0, 51, 102, 0.5);
-                padding: 15px;
-                border-radius: 5px;
-                text-align: center;
-                border: 1px solid #00aaff;
-            }
-            
-            .stat-label {
-                color: #00aaff;
-                font-size: 0.85em;
-                margin-bottom: 5px;
-                text-transform: uppercase;
-            }
-            
-            .stat-value {
-                color: #00ff00;
-                font-size: 1.8em;
-                font-weight: bold;
-                text-shadow: 0 0 5px #0f0;
-            }
-            
-            .log-container {
-                background: rgba(0, 0, 0, 0.5);
-                border: 1px solid #00aaff;
-                border-radius: 5px;
-                padding: 15px;
-                max-height: 300px;
-                overflow-y: auto;
-                font-size: 0.9em;
-            }
-            
-            .log-entry {
-                color: #00ff00;
-                margin-bottom: 5px;
-                padding: 5px;
-                border-left: 2px solid #00aaff;
-                padding-left: 10px;
-            }
-            
-            .status-indicator {
-                display: inline-block;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
-                margin-right: 10px;
-                animation: pulse 2s infinite;
-            }
-            
-            .status-indicator.online {
-                background: #00ff00;
-                box-shadow: 0 0 10px #0f0;
-            }
-            
-            .status-indicator.offline {
-                background: #ff4444;
-                animation: none;
-            }
-            
-            @keyframes pulse {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.5; }
-            }
-            
-            .mission-status {
-                text-align: center;
-                padding: 15px;
-                background: rgba(0, 51, 102, 0.5);
-                border: 2px solid #00ff00;
-                border-radius: 10px;
-                margin-bottom: 20px;
-            }
-            
-            .mission-status.nominal {
-                border-color: #00ff00;
-            }
-            
-            .mission-status.degraded {
-                border-color: #ffaa00;
-            }
-            
-            .mission-status-text {
-                font-size: 1.5em;
-                font-weight: bold;
-                color: #00ff00;
-                text-shadow: 0 0 10px #0f0;
-            }
-            
-            ::-webkit-scrollbar {
-                width: 8px;
-            }
-            
-            ::-webkit-scrollbar-track {
-                background: rgba(0, 255, 0, 0.1);
-            }
-            
-            ::-webkit-scrollbar-thumb {
-                background: #00ff00;
-                border-radius: 4px;
-            }
+            :root { --bg: #050505; --neon-blue: #00d4ff; --neon-green: #00ff88; --neon-orange: #ffaa00; }
+            body { background: var(--bg); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; overflow: hidden; }
+            .glass { background: rgba(20, 20, 25, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; }
+            .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--neon-blue); padding-bottom: 10px; }
+            .mission-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 20px; height: calc(100vh - 120px); }
+            .telemetry-card { margin-bottom: 15px; }
+            .stat-val { font-size: 1.5rem; font-weight: 800; color: var(--neon-green); font-family: monospace; }
+            .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+            .map-container { width: 100%; height: 100%; position: relative; background: #000; border-radius: 8px; border: 1px solid #222; }
+            .log-box { height: 100%; overflow-y: auto; font-family: monospace; font-size: 0.8rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 10px; }
+            .pulse { animation: pulse 2s infinite; }
+            @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         </style>
     </head>
     <body>
-        <div class="container">
-            <div class="header">
-                <h1>🚀 NASA HOME BASE</h1>
-                <div class="subtitle">NETWORKBUSTER MISSION CONTROL</div>
+        <div class="header">
+            <h2 style="color: var(--neon-blue); letter-spacing: 3px;">🛰️ MISSION_CONTROL // ALPHA-7</h2>
+            <div id="clock" style="font-family: monospace; color: var(--neon-orange);">00:00:00 UTC</div>
+        </div>
+        <div class="mission-grid">
+            <div class="sidebar">
+                <div class="glass telemetry-card">
+                    <div class="stat-label">Mission Phase</div>
+                    <div class="stat-val" id="phase">LUNAR_INSERTION</div>
+                </div>
+                <div class="glass telemetry-card">
+                    <div class="stat-label">Velocity</div>
+                    <div class="stat-val" id="vel">24,500 KM/H</div>
+                </div>
+                <div class="glass telemetry-card">
+                    <div class="stat-label">Fuel Remaining</div>
+                    <div class="stat-val" id="fuel" style="color: var(--neon-orange);">84.2%</div>
+                </div>
             </div>
-            
-            <div class="main-grid">
-                <!-- Left Panel: Services -->
-                <div class="panel">
-                    <div class="panel-title">🛰️ Services</div>
-                    <div id="servicesList"></div>
+            <div class="glass map-container">
+                <div style="text-align: center; margin-top: 100px;">
+                    <div style="font-size: 5rem; color: var(--neon-blue);" class="pulse">🌕</div>
+                    <h3 style="color: #fff; margin-top: 20px;">TARGET: LUNAR_SOUTH_POLE</h3>
+                    <p style="color: #888;">ORBITAL_PATH: STABLE</p>
                 </div>
-                
-                <!-- Center Panel: Mission Control -->
-                <div class="panel">
-                    <div class="panel-title">📡 Mission Control</div>
-                    
-                    <div id="missionStatus" class="mission-status nominal">
-                        <div class="mission-status-text">MISSION STATUS: <span id="statusText">NOMINAL</span></div>
-                    </div>
-                    
-                    <div class="mission-stats">
-                        <div class="stat-box">
-                            <div class="stat-label">Mission Time</div>
-                            <div class="stat-value" id="missionTime">0:00:00</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Services Online</div>
-                            <div class="stat-value" id="servicesOnline">0/3</div>
-                        </div>
-                    </div>
-                    
-                    <div class="panel-title" style="margin-top: 20px;">🎮 Quick Actions</div>
-                    <button class="btn" onclick="openAllDashboards()">🚀 Launch All Dashboards</button>
-                    <button class="btn" onclick="refreshStatus()">🔄 Refresh Status</button>
-                    <button class="btn" onclick="openMasterControl()">🎛️ Master Control Panel</button>
-                    <button class="btn" onclick="openWiFiMesh()">📡 WiFi 7 Mesh Overlay</button>
-                </div>
-                
-                <!-- Right Panel: Mission Log -->
-                <div class="panel">
-                    <div class="panel-title">📝 Mission Log</div>
-                    <div class="log-container" id="missionLog"></div>
-                </div>
+            </div>
+            <div class="glass">
+                <div class="stat-label" style="margin-bottom: 10px;">Telemetry Log</div>
+                <div id="logs" class="log-box"></div>
             </div>
         </div>
-        
         <script>
-            let missionStartTime = Date.now();
-            
-            function updateMissionTime() {
-                const elapsed = Math.floor((Date.now() - missionStartTime) / 1000);
-                const hours = Math.floor(elapsed / 3600);
-                const minutes = Math.floor((elapsed % 3600) / 60);
-                const seconds = elapsed % 60;
-                document.getElementById('missionTime').textContent = 
-                    `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            function updateClock() {
+                document.getElementById('clock').textContent = new Date().toISOString().split('T')[1].split('.')[0] + ' UTC';
             }
-            
-            async function refreshStatus() {
-                try {
-                    const response = await fetch('/api/status');
-                    const data = await response.json();
-                    
-                    // Update services list
-                    const servicesList = document.getElementById('servicesList');
-                    servicesList.innerHTML = Object.entries(data.ports).map(([key, service]) => `
-                        <div class="service-item ${service.status}">
-                            <div class="service-name">
-                                <span class="status-indicator ${service.status}"></span>
-                                ${service.name}
-                            </div>
-                            <div class="service-port">Port: ${service.port}</div>
-                            <div class="service-status ${service.status}">${service.status.toUpperCase()}</div>
-                            <button class="btn" onclick="openService('${key}', ${service.port})">Open Dashboard</button>
-                        </div>
-                    `).join('');
-                    
-                    // Update stats
-                    document.getElementById('servicesOnline').textContent = 
-                        `${data.online_services}/${data.total_services}`;
-                    
-                    document.getElementById('statusText').textContent = data.status;
-                    document.getElementById('missionStatus').className = 
-                        `mission-status ${data.status.toLowerCase()}`;
-                    
-                    addLog(`Status updated: ${data.online_services}/${data.total_services} services online`);
-                } catch (error) {
-                    addLog('Error updating status: ' + error.message, 'ERROR');
-                }
+            function addLog(m) {
+                const l = document.getElementById('logs');
+                const e = document.createElement('div');
+                e.textContent = `[${new Date().toLocaleTimeString()}] ${m}`;
+                l.prepend(e);
             }
-            
-            function addLog(message, level = 'INFO') {
-                const logContainer = document.getElementById('missionLog');
-                const timestamp = new Date().toLocaleTimeString();
-                const logEntry = document.createElement('div');
-                logEntry.className = 'log-entry';
-                logEntry.textContent = `[${timestamp}] ${level}: ${message}`;
-                logContainer.insertBefore(logEntry, logContainer.firstChild);
-                
-                // Keep only last 50 entries
-                while (logContainer.children.length > 50) {
-                    logContainer.removeChild(logContainer.lastChild);
-                }
-            }
-            
-            function openService(service, port) {
-                window.open(`http://localhost:${port}`, '_blank');
-                addLog(`Opened ${service} dashboard`);
-            }
-            
-            function openAllDashboards() {
-                window.open('http://localhost:3000', '_blank');
-                window.open('http://localhost:3001/api/specs', '_blank');
-                window.open('http://localhost:3002/audio-lab', '_blank');
-                addLog('All dashboards launched');
-            }
-            
-            function openMasterControl() {
-                window.open('http://localhost:3000/dashboard-control.html', '_blank');
-                addLog('Master control panel opened');
-            }
-            
-            function openWiFiMesh() {
-                window.open('http://localhost:3000/wifi7-mesh-overlay.html', '_blank');
-                addLog('WiFi 7 mesh overlay opened');
-            }
-            
-            // Initialize
-            refreshStatus();
-            setInterval(updateMissionTime, 1000);
-            setInterval(refreshStatus, 5000);
-            addLog('NASA Home Base Mission Control initialized');
+            setInterval(updateClock, 1000);
+            setInterval(() => {
+                const v = 24000 + Math.random() * 1000;
+                document.getElementById('vel').textContent = Math.floor(v).toLocaleString() + ' KM/H';
+                if(Math.random() > 0.7) addLog('TELEMETRY_PACKET_RECEIVED');
+            }, 2000);
+            addLog('SYSTEM_BOOT_SEQUENCE_COMPLETE');
+            addLog('ESTABLISHING_LINK_WITH_VEGAS_DOME...');
         </script>
     </body>
     </html>
@@ -501,6 +189,10 @@ if FLASK_AVAILABLE:
     @app.route('/api/status')
     def api_status():
         return jsonify(home_base.get_system_status())
+
+    @app.route('/api/artemis/status')
+    def artemis_status():
+        return jsonify(home_base.get_artemis_data())
     
     @app.route('/api/open/<service>')
     def api_open_service(service):

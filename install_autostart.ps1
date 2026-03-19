@@ -44,20 +44,30 @@ Write-Host "   ✅ Startup shortcut created: $startupFolder\NetworkBuster.lnk" -
 
 Write-Host "`n[3/3] Creating scheduled task..." -ForegroundColor Yellow
 
+# Firewall configuration for NetworkBuster
+$ports = @(3000, 3001, 3002, 5000, 6000, 7000, 8000, 9000)
+Write-Host "`n[4/4] Configuring Windows Firewall..." -ForegroundColor Yellow
+foreach ($port in $ports) {
+    $ruleName = "NetworkBuster_Port_$port"
+    if (!(Get-NetFirewallRule -Name $ruleName -ErrorAction SilentlyContinue)) {
+        New-NetFirewallRule -DisplayName "NetworkBuster Port $port" -Direction Inbound -LocalPort $port -Protocol TCP -Action Allow -Name $ruleName | Out-Null
+        Write-Host "   ✅ Opened Port $port" -ForegroundColor Green
+    } else {
+        Write-Host "   ℹ️  Port $port already open" -ForegroundColor Cyan
+    }
+}
+
 # Create scheduled task for system events
 $taskXml = @"
 <?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
-    <Description>NetworkBuster Auto-Start on System Events</Description>
+    <Description>NetworkBuster Immersive Auto-Start</Description>
   </RegistrationInfo>
   <Triggers>
     <LogonTrigger>
       <Enabled>true</Enabled>
     </LogonTrigger>
-    <BootTrigger>
-      <Enabled>true</Enabled>
-    </BootTrigger>
   </Triggers>
   <Principals>
     <Principal id="Author">
@@ -72,15 +82,15 @@ $taskXml = @"
     <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
     <AllowHardTerminate>true</AllowHardTerminate>
     <StartWhenAvailable>true</StartWhenAvailable>
-    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
     <AllowStartOnDemand>true</AllowStartOnDemand>
     <Enabled>true</Enabled>
-    <Hidden>false</Hidden>
     <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
   </Settings>
   <Actions>
     <Exec>
-      <Command>$startupScriptPath</Command>
+      <Command>powershell.exe</Command>
+      <Arguments>-ExecutionPolicy Bypass -File "$InstallDir\immersive_boot.ps1"</Arguments>
       <WorkingDirectory>$InstallDir</WorkingDirectory>
     </Exec>
   </Actions>

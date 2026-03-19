@@ -29,6 +29,7 @@ try {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SERVICE_NAME = process.env.SERVICE_NAME || 'Server';
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
 
 // Trust Azure/ingress proxy and hide stack info
@@ -68,28 +69,12 @@ if (cors) {
   app.use(applyCors);
 }
 
-// Middleware (always required)
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+// Unlimited Payload Support
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
-// In-memory rate limiting (simple sliding window)
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
-const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX || 300);
-const rateLimitStore = new Map();
-
+// UNLIMITED TOKENS MODE: Rate limiting disabled
 app.use((req, res, next) => {
-  const now = Date.now();
-  const ip = req.ip || req.connection.remoteAddress || 'unknown';
-  const entry = rateLimitStore.get(ip) || { count: 0, start: now };
-  if (now - entry.start > RATE_LIMIT_WINDOW_MS) {
-    entry.count = 0;
-    entry.start = now;
-  }
-  entry.count += 1;
-  rateLimitStore.set(ip, entry);
-  if (entry.count > RATE_LIMIT_MAX) {
-    return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
-  }
   next();
 });
 
@@ -353,7 +338,7 @@ app.use((err, req, res, next) => {
 
 // Start server
 const server = app.listen(PORT, () => {
-  console.log(`\n🚀 Server running at http://localhost:${PORT}`);
+  console.log(`\n🚀 ${SERVICE_NAME} running at http://localhost:${PORT}`);
   console.log(`⚡ Features:`);
   if (compression) console.log(`   ✓ Compression enabled`);
   if (helmet) console.log(`   ✓ Security headers enabled`);
