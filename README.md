@@ -17,6 +17,30 @@
 
 **📺 Watch on YouTube:** https://www.youtube.com/channel/daypirate1/networkbuster
 
+## 🌐 Global Internet Usage Scope
+
+**NetworkBuster** is engineered for unrestricted global and interplanetary operation. The platform's scope encompasses:
+
+### 📡 Terrestrial Operations
+- **Full Spectrum Connectivity**: Optimized for high-throughput terrestrial fiber, 5G NR, and specialized WiFi 7 mesh overlays.
+- **Global Edge Distribution**: Leveraging the Vercel Edge Network across 100+ countries for sub-100ms latency.
+- **Unlimited AI Throughput**: Unlocked token capacity for global inference requests via the AI Proxy Gateway.
+
+### 🌕 Extra-Terrestrial & Lunar Sync
+- **Artemis Integration**: Real-time telemetry and mission control for lunar surface operations.
+- **Lunar Insertion Monitoring**: Active tracking of orbital phases and deep-space data packets.
+- **Vegas Dome Projection**: High-fidelity architectural visualization for Earth-based mission oversight.
+
+### 🛡️ Secure Execution Layer
+- **GATES Protocol**: Integrated Sam Altman Shutdown Protocol (Mock) for centralized system termination.
+- **Arch Matrix VM**: Visualized network topology mapping across the entire internet namespace.
+- **Distributed Audio Nodes**: Real-time signal analysis and synthesis distributed across multi-server environments.
+
+### 🚀 Strategic Mandate
+NetworkBuster is designed to bridge the gap between local enterprise networks and the "Deep Internet"—extending functional agency to the lunar surface and beyond.
+
+---
+
 ## 🥇 Why NetworkBuster Wins
 
 ### Four Complete Applications

@@ -317,6 +317,16 @@ app.get('/usage', authenticateDevice, (req, res) => {
     });
 });
 
+// Admin: reset usage
+app.post('/usage/reset', authenticateDevice, (req, res) => {
+    if (!req.isAdmin) {
+        return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const result = aiProviders.resetUsage();
+    res.json(result);
+});
+
 // Admin: all usage
 app.get('/usage/all', authenticateDevice, (req, res) => {
     if (!req.isAdmin) {

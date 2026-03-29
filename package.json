@@ -96,6 +96,8 @@
   },
   "dependencies": {
     "@azure/service-bus": "^7.9.3",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
     "express": "^5.2.1",
