@@ -60,6 +60,14 @@ class AITrainingPipelineConfig:
             'embedding_dim': 64,
             'dataset': 'user-content-interactions.csv',
             'model_name': 'content-recommender-v1'
+        },
+        'mission-success-predictor': {
+            'type': 'neural-network',
+            'epochs': 150,
+            'batch_size': 16,
+            'learning_rate': 0.0005,
+            'dataset': 'mission-history-data.csv',
+            'model_name': 'mission-success-v1'
         }
     }
     
