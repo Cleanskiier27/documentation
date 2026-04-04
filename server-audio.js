@@ -159,6 +159,13 @@ app.post('/api/audio/detect-frequency', (req, res) => {
 });
 
 // Audio spectrum analysis
+app.get('/open', (req, res) => {
+  import('child_process').then(cp => {
+    cp.exec(`start http://localhost:${PORT}/audio-lab`);
+    res.json({ success: true, message: 'Launching Audio Lab...' });
+  });
+});
+
 app.post('/api/audio/spectrum', (req, res) => {
   const { streamId } = req.body;
 

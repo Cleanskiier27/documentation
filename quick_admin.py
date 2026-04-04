@@ -194,6 +194,12 @@ def open_bi_magic():
     subprocess.run([sys.executable, "business_intelligence.py"])
 
 
+def open_multi_node_magic():
+    """Launch Multi-Node Orchestrator."""
+    print("🛰️ Launching Multi-Node Orchestrator...")
+    subprocess.run([sys.executable, "multi_node_curl.py"])
+
+
 # ============================================================
 # Main Menu
 # ============================================================
@@ -213,6 +219,7 @@ COMMANDS = {
     "12": ("Open VS Code", open_project),
     "13": ("Open Dashboard", open_dashboard),
     "14": ("Business Magic Hub", open_bi_magic),
+    "15": ("Multi-Node Magic Hub", open_multi_node_magic),
     "k": ("Kill Port (enter port)", lambda: kill_port(input("Port: "))),
 }
 
