@@ -188,13 +188,19 @@ def open_dashboard():
     webbrowser.open("http://localhost:3000")
 
 
+def open_bi_magic():
+    """Launch Business Intelligence Magic Hub."""
+    print("🔮 Launching Business Intelligence Magic...")
+    subprocess.run([sys.executable, "business_intelligence.py"])
+
+
 # ============================================================
 # Main Menu
 # ============================================================
 
 COMMANDS = {
-    "1": ("Start Servers", start_servers),
-    "2": ("Stop Servers", stop_servers),
+    "1": ("Start Servers", start_services),
+    "2": ("Stop Servers", stop_services),
     "3": ("Restart Servers", restart_servers),
     "4": ("Check Ports", check_ports),
     "5": ("Show IP Info", show_ip),
@@ -206,8 +212,10 @@ COMMANDS = {
     "11": ("Clear Logs", clear_logs),
     "12": ("Open VS Code", open_project),
     "13": ("Open Dashboard", open_dashboard),
+    "14": ("Business Magic Hub", open_bi_magic),
     "k": ("Kill Port (enter port)", lambda: kill_port(input("Port: "))),
 }
+
 
 
 def main():

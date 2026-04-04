@@ -32,6 +32,7 @@ TOOLS = {
         {'name': 'WiFi 7 Mesh Overlay', 'url': 'http://localhost:3000/wifi7-mesh-overlay.html'},
         {'name': 'Control Panel', 'url': 'http://localhost:3000/control-panel'},
         {'name': 'Git Dashboard', 'url': 'file:///NetworkBuster_Git_Shortcuts/git_dashboard.html'},
+        {'name': 'Business Magic Hub', 'url': 'http://localhost:4000'},
     ],
     'api_endpoints': [
         {'name': 'Health Check', 'url': 'http://localhost:3001/health'},
