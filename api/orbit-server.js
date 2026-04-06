@@ -4,8 +4,9 @@
  * Exposes endpoints for simulating orbital motion of a wheel over time.
  *
  * Endpoints:
- *   GET /api/orbit/health          → basic ok status
- *   GET /api/orbit/position?t=<s>  → (x, y) position on unit circle at time t (seconds)
+ *   GET /api/orbit/health                   → basic ok status
+ *   GET /api/orbit/position?t=<s>          → (x, y) position on unit circle at time t (seconds)
+ *   GET /api/orbit/standstill?freeze_at=<s> → position frozen at the given time (defaults to t=0)
  *
  * Orbit model: simple circular orbit with configurable radius and angular velocity.
  *   x(t) = radius * cos(omega * t + phase)
@@ -86,6 +87,41 @@ app.get('/api/orbit/position', (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// GET /api/orbit/standstill?freeze_at=<seconds>
+//
+// Returns the orbit position frozen at a specific time.  When no freeze_at
+// value is supplied the orbit rests at its natural starting position (t = 0).
+// ---------------------------------------------------------------------------
+app.get('/api/orbit/standstill', (req, res) => {
+  const rawFreezeAt = req.query.freeze_at;
+
+  let freezeAt = 0;
+
+  if (rawFreezeAt !== undefined && rawFreezeAt !== '') {
+    freezeAt = parseFloat(rawFreezeAt);
+    if (!Number.isFinite(freezeAt)) {
+      return res.status(400).json({
+        error: `Invalid value for freeze_at: "${rawFreezeAt}". Must be a finite number.`,
+      });
+    }
+  }
+
+  const angle = OMEGA * freezeAt + ORBIT_PHASE;
+  const x = ORBIT_RADIUS * Math.cos(angle);
+  const y = ORBIT_RADIUS * Math.sin(angle);
+
+  return res.json({
+    freeze_at: freezeAt,
+    angle_rad: angle,
+    x,
+    y,
+    radius: ORBIT_RADIUS,
+    period: ORBIT_PERIOD,
+    standstill: true,
+  });
+});
+
+// ---------------------------------------------------------------------------
 // 404 fallback
 // ---------------------------------------------------------------------------
 app.use((_req, res) => {
@@ -100,7 +136,8 @@ export { app };
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`Wheel orbit simulation server running on http://localhost:${PORT}`);
-    console.log(`  Health:   GET http://localhost:${PORT}/api/orbit/health`);
-    console.log(`  Position: GET http://localhost:${PORT}/api/orbit/position?t=<seconds>`);
+    console.log(`  Health:     GET http://localhost:${PORT}/api/orbit/health`);
+    console.log(`  Position:   GET http://localhost:${PORT}/api/orbit/position?t=<seconds>`);
+    console.log(`  Standstill: GET http://localhost:${PORT}/api/orbit/standstill?freeze_at=<seconds>`);
   });
 }
