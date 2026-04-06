@@ -85,7 +85,7 @@
 - API keys
 - Subscription IDs
 
-**See Page 3 for full details.**
+**See [Page 11: Security Audit](./11-security-audit.md) for full details.**
 
 ---
 
