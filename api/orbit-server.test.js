@@ -146,3 +146,46 @@ describe('Unknown routes', () => {
     assert.equal(status, 404);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Standstill endpoint
+// ---------------------------------------------------------------------------
+describe('GET /api/orbit/standstill', () => {
+  it('returns 200 with standstill:true and defaults to freeze_at=0', async () => {
+    const { status, body } = await get('/api/orbit/standstill');
+    assert.equal(status, 200);
+    assert.equal(body.standstill, true);
+    assert.equal(body.freeze_at, 0);
+    assert.ok(typeof body.x === 'number', 'x should be a number');
+    assert.ok(typeof body.y === 'number', 'y should be a number');
+    assert.ok(typeof body.angle_rad === 'number', 'angle_rad should be present');
+    assert.ok(typeof body.radius === 'number', 'radius should be present');
+    assert.ok(typeof body.period === 'number', 'period should be present');
+    // At freeze_at=0, x should equal radius (1.0) and y ≈ 0
+    assert.ok(Math.abs(body.x - 1.0) < 1e-10, 'x at freeze_at=0 should equal radius (1.0)');
+    assert.ok(Math.abs(body.y) < 1e-10, 'y at freeze_at=0 should be ~0');
+  });
+
+  it('freezes at the specified time when freeze_at is provided', async () => {
+    // freeze_at=2.5 → quarter revolution → x≈0, y≈1
+    const { status, body } = await get('/api/orbit/standstill?freeze_at=2.5');
+    assert.equal(status, 200);
+    assert.equal(body.freeze_at, 2.5);
+    assert.equal(body.standstill, true);
+    assert.ok(Math.abs(body.x) < 1e-10, `x at freeze_at=2.5 should be ~0, got ${body.x}`);
+    assert.ok(Math.abs(body.y - 1.0) < 1e-10, `y at freeze_at=2.5 should be ~1.0, got ${body.y}`);
+  });
+
+  it('accepts negative freeze_at values', async () => {
+    const { status, body } = await get('/api/orbit/standstill?freeze_at=-5');
+    assert.equal(status, 200);
+    assert.equal(body.freeze_at, -5);
+    assert.equal(body.standstill, true);
+  });
+
+  it('returns 400 when freeze_at is not a number', async () => {
+    const { status, body } = await get('/api/orbit/standstill?freeze_at=abc');
+    assert.equal(status, 400);
+    assert.ok(body.error, 'error message should be present');
+  });
+});
