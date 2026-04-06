@@ -10,8 +10,11 @@ The script records previous settings and creates a restore script at the same lo
 
 param(
     [switch]$Apply,
-    [switch]$Confirm = $true
+    [string]$Confirm = "true"
 )
+
+$ConfirmBool = $Confirm -eq "true" -or $Confirm -eq "$true"
+
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $logFile = Join-Path $scriptDir 'network-boost.log'
@@ -113,7 +116,7 @@ if (Test-Path '/proc/sys') {
             Write-Log "Setting $k to $($keys[$k])"
             sysctl -w $k=$($keys[$k]) | Out-Null
             "sysctl -w $k=$($keys[$k])" | Out-File $logFile -Append
-        } catch { Write-Log "Failed to set $k: $_" }
+        } catch { Write-Log "Failed to set $k" }
     }
 
     Write-Log "Linux network boost applied (temporary). To make changes permanent, add to /etc/sysctl.conf or a conf in /etc/sysctl.d/."

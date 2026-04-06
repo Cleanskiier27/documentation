@@ -137,14 +137,14 @@ AZURE_STORAGE_CONTAINER_BACKUPS=backups
 
 Set-Content -Path $credsFile -Value $credsContent
 (Get-Item $credsFile).Attributes = 'Hidden'
-Write-Host "  ✅ Credentials saved to: $credsFile (hidden)" -ForegroundColor Green
+Write-Host "  [OK] Credentials saved to: $credsFile (hidden)" -ForegroundColor Green
 Write-Host ""
 
-Write-Host "⚠️  IMPORTANT: Add '$credsFile' to .gitignore" -ForegroundColor Yellow
+Write-Host "WARN: Add '$credsFile' to .gitignore" -ForegroundColor Yellow
 Write-Host ""
 
 # Display information
-Write-Host "📦 Blob Containers Created:" -ForegroundColor Yellow
+Write-Host "Blob Containers Created:" -ForegroundColor Yellow
 Write-Host "  1. realtime-data          - Real-time visitor metrics" -ForegroundColor Cyan
 Write-Host "  2. ai-training-datasets   - ML training datasets" -ForegroundColor Cyan
 Write-Host "  3. ml-models              - Trained model artifacts" -ForegroundColor Cyan
@@ -154,23 +154,23 @@ Write-Host "  6. blog-assets            - Blog media and content" -ForegroundCol
 Write-Host "  7. backups                - Backup archives" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "📄 File Shares Created:" -ForegroundColor Yellow
+Write-Host "File Shares Created:" -ForegroundColor Yellow
 Write-Host "  1. cache (100 GB quota)    - Cache storage" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "📊 Tables Created:" -ForegroundColor Yellow
+Write-Host "Tables Created:" -ForegroundColor Yellow
 Write-Host "  1. VisitorMetrics         - Visitor tracking data" -ForegroundColor Cyan
 Write-Host "  2. PerformanceMetrics     - Performance metrics" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "📋 Queues Created:" -ForegroundColor Yellow
+Write-Host "Queues Created:" -ForegroundColor Yellow
 Write-Host "  1. ai-training-jobs       - AI training job queue" -ForegroundColor Cyan
 Write-Host "  2. data-processing        - Data processing queue" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "✨ Storage infrastructure deployment complete!" -ForegroundColor Green
+Write-Host "Storage infrastructure deployment complete!" -ForegroundColor Green
 Write-Host ""
-Write-Host "🎯 Next Steps:" -ForegroundColor Yellow
+Write-Host "Next Steps:" -ForegroundColor Yellow
 Write-Host "  1. Update GitHub Secrets with storage credentials" -ForegroundColor Cyan
 Write-Host "  2. Configure Container Apps to use storage" -ForegroundColor Cyan
 Write-Host "  3. Update immersive reader to fetch from storage" -ForegroundColor Cyan
@@ -181,15 +181,15 @@ Write-Host ""
 $configSecrets = Read-Host "Configure GitHub Secrets now? (y/n)"
 if ($configSecrets -eq 'y') {
     Write-Host ""
-    Write-Host "🔐 Configuring GitHub Secrets..." -ForegroundColor Yellow
+    Write-Host "Configuring GitHub Secrets..." -ForegroundColor Yellow
     
     try {
         gh secret set AZURE_STORAGE_ACCOUNT_NAME --body $storageAccountName
         gh secret set AZURE_STORAGE_ACCOUNT_KEY --body $storageAccountKey
         gh secret set AZURE_STORAGE_CONNECTION_STRING --body $connectionString
-        Write-Host "  ✅ GitHub Secrets configured successfully" -ForegroundColor Green
+        Write-Host "  [OK] GitHub Secrets configured successfully" -ForegroundColor Green
     } catch {
-        Write-Host "  ⚠️  Could not configure GitHub Secrets (gh CLI may not be installed)" -ForegroundColor Yellow
+        Write-Host "  WARN: Could not configure GitHub Secrets (gh CLI may not be installed)" -ForegroundColor Yellow
         Write-Host "     Run these commands manually:" -ForegroundColor Yellow
         Write-Host "     gh secret set AZURE_STORAGE_ACCOUNT_NAME --body '$storageAccountName'" -ForegroundColor Gray
         Write-Host "     gh secret set AZURE_STORAGE_ACCOUNT_KEY --body '$storageAccountKey'" -ForegroundColor Gray
@@ -198,4 +198,4 @@ if ($configSecrets -eq 'y') {
 }
 
 Write-Host ""
-Write-Host "✅ Deployment complete!" -ForegroundColor Green
+Write-Host "[OK] Deployment complete!" -ForegroundColor Green

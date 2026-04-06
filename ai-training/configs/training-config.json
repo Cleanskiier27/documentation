@@ -1,0 +1,9 @@
+{
+  "environment": "production",
+  "models": {
+    "visitor-behavior-model": { "type": "neural-network", "epochs": 100, "batch_size": 32, "learning_rate": 0.001 },
+    "sustainability-predictor": { "type": "random-forest", "n_estimators": 200, "max_depth": 15 },
+    "performance-optimizer": { "type": "gradient-boost", "n_estimators": 150, "learning_rate": 0.1 },
+    "content-recommender": { "type": "collaborative-filtering", "embedding_dim": 64 }
+  }
+}

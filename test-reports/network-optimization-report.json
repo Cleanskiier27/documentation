@@ -8,55 +8,6 @@
     {
       "name": "Wi-Fi",
       "family": "IPv6",
-      "address": "2002:c0a8:ac2:10:ae26:2213:4bd9:2524",
-      "netmask": "ffff:ffff:ffff:ffff::",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
-      "address": "2600:6c67:1a00:2acb::15fd",
-      "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
-      "address": "2600:6c67:1a00:2acb:c8d5:879e:ecf8:a34b",
-      "netmask": "ffff:ffff:ffff:ffff::",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
-      "address": "fd00:90d3:cf42:a938:2969:698d:cff4:7520",
-      "netmask": "ffff:ffff:ffff:ffff::",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
-      "address": "2002:c0a8:ac2:10:6922:7ed5:6a79:bb54",
-      "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
-      "address": "2600:6c67:1a00:2acb:5098:d988:7f39:6e3a",
-      "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
-      "address": "fd00:90d3:cf42:a938:5098:d988:7f39:6e3a",
-      "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
-      "mac": "8c:b0:e9:55:ea:45"
-    },
-    {
-      "name": "Wi-Fi",
-      "family": "IPv6",
       "address": "fe80::f13:94e1:1011:862",
       "netmask": "ffff:ffff:ffff:ffff::",
       "mac": "8c:b0:e9:55:ea:45"
@@ -64,18 +15,32 @@
     {
       "name": "Wi-Fi",
       "family": "IPv4",
-      "address": "192.168.1.180",
-      "netmask": "255.255.255.0",
+      "address": "192.168.68.55",
+      "netmask": "255.255.252.0",
       "mac": "8c:b0:e9:55:ea:45"
+    },
+    {
+      "name": "vEthernet (WSL (Hyper-V firewall))",
+      "family": "IPv6",
+      "address": "fe80::5b72:4f49:1e58:f5a2",
+      "netmask": "ffff:ffff:ffff:ffff::",
+      "mac": "00:15:5d:49:ac:d2"
+    },
+    {
+      "name": "vEthernet (WSL (Hyper-V firewall))",
+      "family": "IPv4",
+      "address": "172.31.208.1",
+      "netmask": "255.255.240.0",
+      "mac": "00:15:5d:49:ac:d2"
     }
   ],
   "dns": {
     "hostname": "google.com",
     "iterations": 10,
-    "averageMs": "6.44",
-    "cachedAvgMs": "0.60",
-    "uncachedAvgMs": "12.28",
-    "improvement": "95.1%"
+    "averageMs": "19.70",
+    "cachedAvgMs": "0.87",
+    "uncachedAvgMs": "38.53",
+    "improvement": "97.7%"
   },
   "config": {
     "httpAgent": {
@@ -118,7 +83,7 @@
     "connectionsCreated": 0,
     "connectionsReused": 0,
     "bytesTransferred": 1000,
-    "latencySum": 1740.4747,
+    "latencySum": 1570.9497000000001,
     "requestCount": 5
   }
 }

@@ -119,7 +119,7 @@ curl http://localhost:3002/health
 │                                              │
 │  🌐 Main Web Server (3000)                  │
 │     ├─ Control Panel with equalizer         │
-│     ├─ Rocketman music player              │
+│     ├─ YouTube Music player              │
 │     ├─ Volume toggle (mute/unmute)         │
 │     └─ Static files (web-app, blog, etc)   │
 │                                              │
@@ -265,7 +265,7 @@ All new scripts added:
 - Stream monitoring
 
 ✅ **Control Panel Enhancements**
-- Rocketman music player
+- YouTube Music player
 - 5-band equalizer
 - Volume control with mute toggle
 - Real-time EQ adjustments

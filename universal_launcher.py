@@ -17,6 +17,7 @@ TOOLS = {
         {'name': 'Web Server', 'port': 3000, 'cmd': 'node server-universal.js', 'url': 'http://localhost:3000'},
         {'name': 'API Server', 'port': 3001, 'cmd': 'cd api && node server-universal.js', 'url': 'http://localhost:3001'},
         {'name': 'Audio Stream', 'port': 3002, 'cmd': 'node server-audio.js', 'url': 'http://localhost:3002'},
+        {'name': 'YouTube Trends', 'port': 8001, 'cmd': 'python youtube_trends_service.py', 'url': 'http://localhost:8001'},
         {'name': 'Mission Control', 'port': 5000, 'cmd': 'python nasa_home_base.py', 'url': 'http://localhost:5000'},
         {'name': 'Network Map', 'port': 6000, 'cmd': 'python network_map_viewer.py', 'url': 'http://localhost:6000'},
     ],
@@ -29,6 +30,7 @@ TOOLS = {
     ],
     'dashboards': [
         {'name': 'Dashboard Control', 'url': 'http://localhost:3000/dashboard-control.html'},
+        {'name': 'YouTube Trends', 'url': 'http://localhost:8001'},
         {'name': 'WiFi 7 Mesh Overlay', 'url': 'http://localhost:3000/wifi7-mesh-overlay.html'},
         {'name': 'Control Panel', 'url': 'http://localhost:3000/control-panel'},
         {'name': 'Git Dashboard', 'url': 'file:///NetworkBuster_Git_Shortcuts/git_dashboard.html'},
@@ -36,6 +38,7 @@ TOOLS = {
     ],
     'api_endpoints': [
         {'name': 'Health Check', 'url': 'http://localhost:3001/health'},
+        {'name': 'YouTube Trends API', 'url': 'http://localhost:8001/api/trends'},
         {'name': 'System Specs', 'url': 'http://localhost:3001/api/specs'},
         {'name': 'Device Status', 'url': 'http://localhost:6000/api/devices'},
         {'name': 'Documentation', 'url': 'http://localhost:6000/api/docs'},

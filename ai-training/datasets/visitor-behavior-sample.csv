@@ -1,0 +1,6 @@
+session_id,user_id,timestamp,page,duration,clicks,scroll_depth,device
+s001,u001,2025-01-01T10:00:00,home,45,3,0.8,mobile
+s002,u002,2025-01-01T10:05:00,blog,120,5,0.95,desktop
+s003,u001,2025-01-01T10:10:00,products,90,8,0.7,mobile
+s004,u003,2025-01-01T10:15:00,about,30,1,0.4,tablet
+s005,u002,2025-01-01T10:20:00,contact,15,2,0.3,desktop

@@ -145,7 +145,7 @@ const KNOWLEDGE_BASE = {
   audio: {
     patterns: ['audio', 'music', 'sound', 'equalizer', 'streaming'],
     responses: [
-      "Our Audio Lab features:\n• Real-time frequency synthesis\n• AI frequency detection\n• 5-band equalizer (Bass, Low Mid, Mid, High Mid, Treble)\n• Spotify integration\n• Volume control with mute toggle\n\nAccess it at port 3002!"
+      "Our Audio Lab features:\n• Real-time frequency synthesis\n• AI frequency detection\n• 5-band equalizer (Bass, Low Mid, Mid, High Mid, Treble)\n• YouTube Music integration\n• Volume control with mute toggle\n\nAccess it at port 3002!"
     ]
   },
   dashboard: {

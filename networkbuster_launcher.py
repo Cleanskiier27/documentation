@@ -69,6 +69,14 @@ SERVICES = [
         'startup_delay': 10
     },
     {
+        'name': 'YouTube Trends',
+        'port': 8001,
+        'command': 'python youtube_trends_service.py',
+        'type': 'python',
+        'critical': False,
+        'startup_delay': 11
+    },
+    {
         'name': 'API Tracer',
         'port': 8000,
         'command': 'python api_tracer.py',

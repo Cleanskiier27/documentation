@@ -281,36 +281,36 @@ if __name__ == "__main__":
 function Show-NextSteps {
     Write-Header "Next Steps"
     
-    Write-Status "✅ AI Training Pipeline setup complete!" "Success"
+    Write-Status "AI Training Pipeline setup complete!" "Success"
     Write-Status ""
     
-    Write-Host "📋 Configuration Required:" -ForegroundColor Cyan
+    Write-Host "Configuration Required:" -ForegroundColor Cyan
     Write-Host "  1. Copy: .\ai-training\configs\environment-template.env"
     Write-Host "  2. Rename to: .env"
     Write-Host "  3. Fill in actual Azure Storage credentials"
     Write-Host ""
     
-    Write-Host "📊 Dataset Preparation:" -ForegroundColor Cyan
+    Write-Host "Dataset Preparation:" -ForegroundColor Cyan
     Write-Host "  1. Collect training data from Azure Log Analytics"
     Write-Host "  2. Place CSV files in: .\ai-training\datasets\"
     Write-Host "  3. Upload to Azure Blob Storage: ai-training-datasets container"
     Write-Host ""
     
-    Write-Host "🚀 Running the Pipeline:" -ForegroundColor Cyan
+    Write-Host "Running the Pipeline:" -ForegroundColor Cyan
     Write-Host "  python ai-training-pipeline.py"
     Write-Host "  or"
     Write-Host "  python .\ai-training\scripts\deploy.py"
     Write-Host ""
     
-    Write-Host "📚 Documentation:" -ForegroundColor Cyan
+    Write-Host "Documentation:" -ForegroundColor Cyan
     Write-Host "  See: AI_TRAINING_PIPELINE_SETUP.md"
     Write-Host ""
     
-    Write-Host "💾 Available Models:" -ForegroundColor Cyan
-    Write-Host "  • visitor-behavior-model (Neural Network)"
-    Write-Host "  • sustainability-predictor (Random Forest)"
-    Write-Host "  • performance-optimizer (Gradient Boosting)"
-    Write-Host "  • content-recommender (Collaborative Filtering)"
+    Write-Host "Available Models:" -ForegroundColor Cyan
+    Write-Host "  - visitor-behavior-model (Neural Network)"
+    Write-Host "  - sustainability-predictor (Random Forest)"
+    Write-Host "  - performance-optimizer (Gradient Boosting)"
+    Write-Host "  - content-recommender (Collaborative Filtering)"
     Write-Host ""
 }
 
@@ -330,7 +330,7 @@ $pythonOK = Test-PythonEnvironment
 $azureOK = Test-AzureCLI
 
 if (-not $pythonOK) {
-    Write-Status "❌ Python is required to continue" "Error"
+    Write-Status "Python is required to continue" "Error"
     exit 1
 }
 
@@ -358,5 +358,5 @@ Test-AzureConnection
 Show-NextSteps
 
 Write-Host ""
-Write-Status "🎉 AI Training Pipeline ready for deployment!" "Success"
+Write-Status "AI Training Pipeline ready for deployment!" "Success"
 Write-Host ""
