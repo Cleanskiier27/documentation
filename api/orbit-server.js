@@ -27,7 +27,10 @@ const ORBIT_PERIOD = parseFloat(process.env.ORBIT_PERIOD ?? '10.0'); // seconds 
 const ORBIT_PHASE = parseFloat(process.env.ORBIT_PHASE ?? '0.0');   // initial phase offset (radians)
 const OMEGA = (2 * Math.PI) / ORBIT_PERIOD;
 
-const PORT = parseInt(process.env.PORT ?? '3001', 10);
+const parsedPort = parseInt(process.env.PORT ?? '3001', 10);
+const PORT = Number.isInteger(parsedPort) && parsedPort >= 1 && parsedPort <= 65535
+  ? parsedPort
+  : 3001;
 
 // ---------------------------------------------------------------------------
 // Middleware
