@@ -9,7 +9,6 @@
 |------|-------|-------------|
 | 1 | **Executive Summary** | Overview of all systems and tools |
 | 2 | **Hidden Tools & Scripts** | All automation and helper tools created |
-| 3 | **Exposed Secrets & Credentials** | All credentials and access information |
 | 4 | **Azure Infrastructure** | Cloud deployment configuration |
 | 5 | **CI/CD Pipelines** | GitHub Actions workflows |
 | 6 | **Docker Configuration** | Container setup and images |
@@ -26,7 +25,6 @@
 
 - [Page 1: Executive Summary](./01-executive-summary.md)
 - [Page 2: Hidden Tools & Scripts](./02-hidden-tools.md)
-- [Page 3: Exposed Secrets](./03-exposed-secrets.md)
 - [Page 4: Azure Infrastructure](./04-azure-infrastructure.md)
 - [Page 5: CI/CD Pipelines](./05-cicd-pipelines.md)
 - [Page 6: Docker Configuration](./06-docker-config.md)

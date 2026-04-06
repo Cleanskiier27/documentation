@@ -66,7 +66,6 @@ export default defineConfig({
       {
         text: '🔐 Security & Secrets',
         items: [
-          { text: '03 · Exposed Secrets', link: '/03-exposed-secrets' },
           { text: '11 · Security Audit', link: '/11-security-audit' },
         ]
       },
