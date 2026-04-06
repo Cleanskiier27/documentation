@@ -33,7 +33,7 @@ When `agent-network-scan.js` calls `scanNode('A')` without a visited-set guard, 
 scanNode('A') → scanNode('B') → scanNode('C') → scanNode('A') → scanNode('B') → ...
 ```
 
-Node.js throws `RangeError: Maximum call stack size exceeded` after ~10 000 frames, or the
+Node.js throws `RangeError: Maximum call stack size exceeded` after ~10,000 frames, or the
 process hangs if the cycle is slower / IO-gated.
 
 ---
@@ -177,7 +177,7 @@ async function scanGraphWithTimeout(startId, { maxDepth = 64, timeoutMs = 5000 }
 - **No security posture change.** Guards are purely algorithmic; no new ports, no new auth flows.
 - **Backward-compatible.** The `visited` parameter defaults to `new Set()`, so existing call sites that pass only `(nodeId, graph)` continue to work.
 - **`maxDepth` default is 64.** Adjust per agent if your network legitimately exceeds 64 hops.
-- **`timeoutMs` default is 5 000 ms** for Pattern 3. Set lower for health-check endpoints; set higher for deep-scan jobs.
+- **`timeoutMs` default is 5,000 ms** for Pattern 3. Set lower for health-check endpoints; set higher for deep-scan jobs.
 
 ---
 

@@ -189,7 +189,7 @@ function unsafeDFS(graph, node, seen = new Set()) {
 
   // 4. Pattern 3 — async DFS with timeout
   console.log('--- [SAFE-3] Async iterative DFS with circuit breaker ---');
-  const p3 = await asyncIterativeDFS(GRAPH, 'A', { timeoutMs: 200 });
+  const p3 = await asyncIterativeDFS(GRAPH, 'A', { timeoutMs: 500 });
   console.log('  Visited order:', p3.order.join(' → '));
   console.log('  TimedOut?', p3.timedOut, '| Truncated?', p3.truncated);
   console.log('  ✓ Completed safely\n');
