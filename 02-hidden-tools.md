@@ -314,4 +314,4 @@ logAnalyticsId
 
 ---
 
-**[← Back to Index](./00-index.md) | [Next: Page 3 →](./03-exposed-secrets.md)**
+**[← Back to Index](./00-index.md) | [Next: Page 4 →](./04-azure-infrastructure.md)**

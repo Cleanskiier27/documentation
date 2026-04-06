@@ -472,7 +472,6 @@ git log               # View history
 - [Index](./00-index.md)
 - [Page 1: Executive Summary](./01-executive-summary.md)
 - [Page 2: Hidden Tools](./02-hidden-tools.md)
-- [Page 3: Exposed Secrets](./03-exposed-secrets.md)
 - [Page 4: Azure Infrastructure](./04-azure-infrastructure.md)
 - [Page 5: CI/CD Pipelines](./05-cicd-pipelines.md)
 - [Page 6: Docker Configuration](./06-docker-config.md)
