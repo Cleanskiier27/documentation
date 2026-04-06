@@ -6,10 +6,15 @@
   "scripts": {
     "docs:dev": "vitepress dev .",
     "docs:build": "vitepress build .",
-    "docs:preview": "vitepress preview ."
+    "docs:preview": "vitepress preview .",
+    "orbit:start": "node api/orbit-server.js",
+    "orbit:test": "node --test api/orbit-server.test.js"
   },
   "devDependencies": {
     "vitepress": "^1.6.0",
     "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
