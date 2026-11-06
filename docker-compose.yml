@@ -1,0 +1,100 @@
+services:
+  aiworld-api:
+    image: nginx:alpine
+    container_name: aiworld-api
+    ports:
+      - "${SATGPU_API_PORT:-8000}:80"
+    environment:
+      APP_NAME: AI World - NetworkBuster
+      APP_BRAND: ai-world
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      UNIVERSAL_API_BASE_URL: ${UNIVERSAL_API_BASE_URL:-http://localhost}
+      UNIVERSAL_API_PORT: ${UNIVERSAL_API_PORT:-8080}
+      WIFI7_MESH_MODE: ${WIFI7_MESH_MODE:-overlay}
+      WIFI7_MESH_INTERFACE: ${WIFI7_MESH_INTERFACE:-mesh0}
+
+  aiworld-web:
+    image: nginx:alpine
+    container_name: aiworld-web
+    ports:
+      - "${SATGPU_WEB_PORT:-3000}:80"
+    environment:
+      APP_NAME: AI World - NetworkBuster
+      APP_BRAND: ai-world
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      UNIVERSAL_API_BASE_URL: ${UNIVERSAL_API_BASE_URL:-http://localhost}
+      UNIVERSAL_API_PORT: ${UNIVERSAL_API_PORT:-8080}
+      WIFI7_MESH_MODE: ${WIFI7_MESH_MODE:-overlay}
+      WIFI7_MESH_INTERFACE: ${WIFI7_MESH_INTERFACE:-mesh0}
+
+  aiworld-mesh:
+    image: nginx:alpine
+    container_name: aiworld-mesh
+    ports:
+      - "${SATGPU_WORKER_PORT:-9000}:80"
+    environment:
+      APP_NAME: AI World - NetworkBuster Mesh
+      APP_BRAND: ai-world
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      UNIVERSAL_API_BASE_URL: ${UNIVERSAL_API_BASE_URL:-http://localhost}
+      UNIVERSAL_API_PORT: ${UNIVERSAL_API_PORT:-8080}
+      WIFI7_MESH_MODE: ${WIFI7_MESH_MODE:-overlay}
+      WIFI7_MESH_INTERFACE: ${WIFI7_MESH_INTERFACE:-mesh0}
+      WIFI7_MESH_SSID: ${WIFI7_MESH_SSID:-AI-World-Mesh}
+      WIFI7_MESH_CHANNEL: ${WIFI7_MESH_CHANNEL:-6}
+
+  aiworld-map:
+    image: nginx:alpine
+    container_name: aiworld-map
+    ports:
+      - "${SATELLITE_MAP_PORT:-8100}:80"
+    environment:
+      APP_NAME: AI World Satellite Map
+      APP_BRAND: map
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      SERVICE_ROLE: satellite-map
+
+  aiworld-satellite:
+    image: nginx:alpine
+    container_name: aiworld-satellite
+    ports:
+      - "${SATELLITE_VIEW_PORT:-8101}:80"
+    environment:
+      APP_NAME: AI World Satellite View
+      APP_BRAND: satellite
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      SERVICE_ROLE: satellite-view
+
+  aiworld-analytics:
+    image: nginx:alpine
+    container_name: aiworld-analytics
+    ports:
+      - "${ANALYTICS_PORT:-8200}:80"
+    environment:
+      APP_NAME: AI World Analytics
+      APP_BRAND: analytics
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      SERVICE_ROLE: analytics
+
+  aiworld-telemetry:
+    image: nginx:alpine
+    container_name: aiworld-telemetry
+    ports:
+      - "${TELEMETRY_PORT:-8300}:80"
+    environment:
+      APP_NAME: AI World Telemetry
+      APP_BRAND: telemetry
+      APP_HOST: ${AIWORLD_HOST:-http://localhost}
+      SERVICE_ROLE: telemetry
+
+  universal-api:
+    image: nginx:alpine
+    container_name: universal-api
+    ports:
+      - "${UNIVERSAL_API_PORT:-8080}:80"
+    environment:
+      APP_NAME: Universal API Gateway
+      APP_BRAND: universal-api
+      APP_HOST: ${UNIVERSAL_API_BASE_URL:-http://localhost}
+      WIFI7_MESH_MODE: ${WIFI7_MESH_MODE:-overlay}
+      WIFI7_MESH_INTERFACE: ${WIFI7_MESH_INTERFACE:-mesh0}

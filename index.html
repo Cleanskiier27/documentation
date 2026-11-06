@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI World - NetworkBuster | Origin</title>
+  <style>
+    :root {
+      --bg: #06131f;
+      --panel: rgba(10, 27, 39, 0.9);
+      --primary: #62d0ff;
+      --accent: #8ef3c5;
+      --text: #eaf8ff;
+      --muted: #b9d8ec;
+      --shadow: rgba(0, 0, 0, 0.32);
+      --warning: #ffd166;
+      --public: #9ae6b4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, #133d5b 0%, var(--bg) 42%, #030d15 100%);
+      font-family: Segoe UI, Arial, sans-serif;
+      color: var(--text);
+    }
+    .card {
+      width: min(860px, 92vw);
+      background: var(--panel);
+      border: 1px solid rgba(98, 208, 255, 0.35);
+      box-shadow: 0 18px 50px var(--shadow);
+      border-radius: 22px;
+      padding: 32px 28px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 0.04em;
+    }
+    .subtitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(98, 208, 255, 0.08);
+      border: 1px solid rgba(98, 208, 255, 0.25);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--primary);
+    }
+    .meta {
+      margin: 0 0 18px;
+      color: var(--warning);
+      font-size: 0.96rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    p {
+      color: var(--muted);
+      margin: 0 auto 20px;
+      font-size: 1.08rem;
+      max-width: 660px;
+      line-height: 1.6;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    button, a.button {
+      appearance: none;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+    button:hover, a.button:hover {
+      transform: translateY(-1px);
+      opacity: 0.98;
+    }
+    .primary {
+      background: linear-gradient(135deg, var(--primary), #7a9cff);
+      color: #03151d;
+      box-shadow: 0 10px 24px rgba(98, 208, 255, 0.25);
+    }
+    .secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .portal-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      text-align: left;
+    }
+    .portal {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .portal h2 {
+      margin: 0 0 8px;
+      font-size: 1.04rem;
+    }
+    .portal p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    .portal a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+      min-height: 38px;
+      padding: 8px 12px;
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid rgba(98, 208, 255, 0.2);
+      border-radius: 999px;
+      background: rgba(98, 208, 255, 0.06);
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+    .portal a:hover,
+    .links a:hover {
+      background: rgba(98, 208, 255, 0.12);
+      border-color: rgba(98, 208, 255, 0.35);
+      transform: translateY(-1px);
+    }
+    .links {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid rgba(98, 208, 255, 0.2);
+      border-radius: 999px;
+      background: rgba(98, 208, 255, 0.05);
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>AI World - NetworkBuster</h1>
+    <div class="subtitle">Origin Manager · Main Committer: User</div>
+    <div class="meta">Project leadership and operations hub</div>
+    <p>
+      This is the main origin and management layer for the system. It leaves dedicated space for mission-critical NASA access and a general-public portal while keeping the primary operator and contributor identity centered on the user.
+    </p>
+
+    <div class="actions">
+      <button class="primary" onclick="startProject()">Start Project</button>
+      <a class="button secondary" href="http://localhost:8080" target="_blank" rel="noreferrer">Open Universal API</a>
+    </div>
+
+    <div class="portal-grid">
+      <div class="portal">
+        <h2>Origin / Manager</h2>
+        <p>Primary control layer and project command center.</p>
+        <a href="index.html">Open origin</a>
+      </div>
+      <div class="portal">
+        <h2>NASA Access</h2>
+        <p>Reserved operational path for mission overlays, telemetry, and institutional workflows.</p>
+        <a href="nasa.html">Open NASA portal</a>
+      </div>
+      <div class="portal">
+        <h2>General Public</h2>
+        <p>Public-facing landing page and community-ready overview.</p>
+        <a href="public.html">Open public page</a>
+      </div>
+    </div>
+
+    <div class="links">
+      <a href="http://localhost:8000" target="_blank" rel="noreferrer">API</a>
+      <a href="http://localhost:3000" target="_blank" rel="noreferrer">Web</a>
+      <a href="http://localhost:9000" target="_blank" rel="noreferrer">Mesh</a>
+      <a href="http://localhost:8100" target="_blank" rel="noreferrer">Map</a>
+      <a href="http://localhost:8200" target="_blank" rel="noreferrer">Analytics</a>
+    </div>
+  </main>
+
+  <script>
+    function startProject() {
+      const target = 'http://localhost:8080';
+      window.location.href = target;
+    }
+  </script>
+</body>
+</html>

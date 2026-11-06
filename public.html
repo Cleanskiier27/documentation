@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI World - Public Portal</title>
+  <style>
+    :root {
+      --bg: #071a1f;
+      --panel: rgba(10, 28, 31, 0.86);
+      --primary: #7af0c4;
+      --accent: #d9f99d;
+      --text: #ecfffb;
+      --muted: #c7e9dd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, #103b38 0%, #071a1f 42%, #030c0d 100%);
+      font-family: Segoe UI, Arial, sans-serif;
+      color: var(--text);
+    }
+    .card {
+      width: min(720px, 92vw);
+      background: var(--panel);
+      border: 1px solid rgba(122, 240, 196, 0.3);
+      border-radius: 20px;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.3);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(122, 240, 196, 0.08);
+      border: 1px solid rgba(122, 240, 196, 0.28);
+      border-radius: 999px;
+      padding: 8px 14px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin: 0 0 22px;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    a.button {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text);
+      background: transparent;
+    }
+    a.primary {
+      background: linear-gradient(135deg, var(--primary), #d9f99d);
+      color: #031915;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Public Portal</h1>
+    <div class="tag">AI World Community Access</div>
+    <p>
+      This page is reserved for general public and community-facing information. The project retains the user as the primary committer and origin, while the public area offers a simple, clean entry point for overview and access.
+    </p>
+    <div class="actions">
+      <a class="button primary" href="http://localhost:8080" target="_blank" rel="noreferrer">Open Universal API</a>
+      <a class="button" href="index.html">Back to Origin</a>
+    </div>
+  </main>
+</body>
+</html>

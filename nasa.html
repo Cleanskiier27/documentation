@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI World - NASA Portal</title>
+  <style>
+    :root {
+      --bg: #06131f;
+      --panel: rgba(10, 27, 39, 0.9);
+      --primary: #8db9ff;
+      --accent: #f5d76d;
+      --text: #edf5ff;
+      --muted: #bcd3eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, #0b2440 0%, #06131f 45%, #020b11 100%);
+      font-family: Segoe UI, Arial, sans-serif;
+      color: var(--text);
+    }
+    .card {
+      width: min(720px, 92vw);
+      background: var(--panel);
+      border: 1px solid rgba(141, 185, 255, 0.35);
+      border-radius: 20px;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(141, 185, 255, 0.08);
+      border: 1px solid rgba(141, 185, 255, 0.3);
+      border-radius: 999px;
+      padding: 8px 14px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin: 0 0 22px;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    a.button {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text);
+      background: transparent;
+    }
+    a.primary {
+      background: linear-gradient(135deg, var(--primary), #7fe1ff);
+      color: #06131f;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>NASA Portal</h1>
+    <div class="tag">AI World Mission Access</div>
+    <p>
+      This section is reserved for NASA-oriented operations, mission overlays, and institutional telemetry workflows. The main origin remains the user-led operational hub, while this portal provides a clear slot for deeper mission-specific access.
+    </p>
+    <div class="actions">
+      <a class="button primary" href="http://localhost:8080" target="_blank" rel="noreferrer">Open Universal API</a>
+      <a class="button" href="index.html">Back to Origin</a>
+    </div>
+  </main>
+</body>
+</html>

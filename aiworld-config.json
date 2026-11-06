@@ -1,0 +1,20 @@
+{
+  "app": "AI World - NetworkBuster",
+  "host": "http://localhost",
+  "universalApi": "http://localhost:8080",
+  "endpoints": {
+    "api": "http://localhost:8000",
+    "web": "http://localhost:3000",
+    "mesh": "http://localhost:9000",
+    "map": "http://localhost:8100",
+    "analytics": "http://localhost:8200",
+    "telemetry": "http://localhost:8300",
+    "universalApi": "http://localhost:8080"
+  },
+  "wifi7": {
+    "mode": "overlay",
+    "interface": "mesh0",
+    "ssid": "AI-World-Mesh",
+    "channel": "6"
+  }
+}
